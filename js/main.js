@@ -1,8 +1,10 @@
 /*----- constants -----*/
-
-
-  /*----- state variables -----*/
-class cell {
+const boardSizes = {
+    e: [9, 9],
+    m: [16, 16],
+    h: [16, 30]
+}
+class mainCell {
     constructor(isRevealed, isFlagged, hasMine, minesTouching) {
         this.isRevealed = isRevealed;
         this.isFlagged = isFlagged;
@@ -10,11 +12,14 @@ class cell {
         this.minesTouching = minesTouching;
     }
 }
+/*----- state variables -----*/
+
+const cell = new mainCell(false, false, false, 0)
 let board = []
 let boardSize;
 
   /*----- cached elements  -----*/
-
+const boardEl = document.getElementById('board')
 
   /*----- event listeners -----*/
 document.querySelector('header').addEventListener('click', handleDifficulty)
@@ -23,26 +28,28 @@ document.querySelector('header').addEventListener('click', handleDifficulty)
   init();
 
   function init() {
-    board = [
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-        [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    ]
+    // board = [
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
+    // ]
+    boardSize = 'm';
+    render();
   }
-
+  
   function render() {
     renderBoard();
     renderControls();
@@ -51,7 +58,7 @@ document.querySelector('header').addEventListener('click', handleDifficulty)
   }
 
   function renderBoard() {
-
+    renderBoardSize();
   }
 
   function renderControls() {
@@ -66,8 +73,24 @@ document.querySelector('header').addEventListener('click', handleDifficulty)
 
   }
 
+  function renderBoardSize() {
+    board.length = 0;
+    for (let i = 0; i < boardSizes[boardSize][0]; i++) {
+        board.push([])
+    }
+    board.forEach(function(arr) {
+       for (let i = 0; i < boardSizes[boardSize][1]; i++) {
+        arr.push(cell)
+        }
+    })
+  }
+     
+  
+
   function handleDifficulty(evt) {
     //guards
     if (evt.target.tagName !== 'BUTTON') return;
-    boardSize = evt.target.getAttribute('id')
+    //------------------------------------------
+    boardSize = evt.target.getAttribute('id');
+    render();
   }
