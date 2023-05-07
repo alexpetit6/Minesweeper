@@ -66,10 +66,18 @@ document.querySelector('header').addEventListener('click', handleDifficulty)
     boardEl.style.gridTemplateRows = `repeat(${boardSizes[boardSize][0]}, 5vmin)`;
     boardEl.style.gridTemplateColumns = `repeat(${boardSizes[boardSize][1]}, 5vmin)`;
     let boardTotal = (boardSizes[boardSize][0]) * (boardSizes[boardSize][1]);
-    for (let i = 0; i < boardTotal; i++) {
-       const newCellEl = document.createElement('div');
-       boardEl.append(newCellEl);
-    }
+    board.forEach(function(rowArr, rowIdx) {
+        rowArr.forEach(function(col, colIdx) {
+            const newCellEl = document.createElement('div');
+            newCellEl.setAttribute('id', `${rowIdx}${colIdx}`);
+            boardEl.append(newCellEl);
+        })
+    })
+    // for (let i = 0; i < boardTotal; i++) {
+    //    const newCellEl = document.createElement('div');
+    //    newCellEl.setAttribute('id', ``)
+    //    boardEl.append(newCellEl);
+    // }
   }
 
   function renderControls() {
