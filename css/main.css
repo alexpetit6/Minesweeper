@@ -27,6 +27,9 @@ header {
     height: 5vmin;
     width: 5vmin;
     border: 0.2vmin solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
  
 div > img {
