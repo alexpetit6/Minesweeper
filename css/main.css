@@ -28,4 +28,8 @@ header {
     width: 5vmin;
     border: 0.2vmin solid black;
 }
-
+ 
+div > img {
+    height: 100%;
+    width: 100%;
+}

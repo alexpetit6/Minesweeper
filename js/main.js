@@ -6,7 +6,8 @@ const boardSizes = {
     h: [16, 30, 99]
 }
 class mainCell {
-    constructor(isRevealed, isFlagged, hasMine, minesTouching) {
+    constructor(position, isRevealed, isFlagged, hasMine, minesTouching) {
+        this.position = position
         this.isRevealed = isRevealed;
         this.isFlagged = isFlagged;
         this.hasMine = hasMine;
@@ -17,8 +18,8 @@ class mainCell {
 
 /*----- state variables -----*/
 
-const cell = new mainCell(false, false, false, 0)
-let board = []
+const cell = new mainCell(null, false, false, false, 0)
+let board = [];
 let boardSize;
 let mineCount;
 
@@ -70,6 +71,7 @@ document.querySelector('header').addEventListener('click', handleDifficulty)
         rowArr.forEach(function(col, colIdx) {
             const newCellEl = document.createElement('div');
             newCellEl.setAttribute('id', `${rowIdx}${colIdx}`);
+            newCellEl.innerHTML = '<img src="https://dannytan.github.io/images/minesweeper_bomb.png">'
             boardEl.append(newCellEl);
         })
     })
@@ -89,7 +91,7 @@ document.querySelector('header').addEventListener('click', handleDifficulty)
   }
 
   function renderMines() {
-
+    // if (cell.hasMine = false) 
   }
 
   function renderBoardSize() {
@@ -97,9 +99,10 @@ document.querySelector('header').addEventListener('click', handleDifficulty)
     for (let i = 0; i < boardSizes[boardSize][0]; i++) {''
         board.push([])
     }
-    board.forEach(function(arr) {
+    board.forEach(function(rowArr, rowIdx) {
        for (let i = 0; i < boardSizes[boardSize][1]; i++) {
-        arr.push(cell)
+        let newCell = new mainCell([rowIdx, i], false, false, false, 0);
+        rowArr.push(newCell)
         }
     })
   }
