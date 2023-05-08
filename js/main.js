@@ -43,14 +43,14 @@ document.getElementById('reset').addEventListener('click', function(){
     document.getElementById('h').style.visibility = 'visible';   
     board = [];
     boardSize = 'm';
+    renderBoard();
     render();
   }
   
   function render() {
-    renderBoard();
+    renderMines();
     renderControls();
     renderMessages();
-    renderMines();
   }
 
   function renderBoard() {
@@ -82,6 +82,8 @@ document.getElementById('reset').addEventListener('click', function(){
   }
 
   function renderMines() {
+     
+    //-------------------------------
     board.forEach(function(rowArr) {
         rowArr.forEach(function(col) {
             let cellEl = document.getElementById(`${col.position[0]},${col.position[1]}`);
@@ -110,6 +112,17 @@ document.getElementById('reset').addEventListener('click', function(){
     }
   }
 
+  function placeMines() {
+    let count = 0
+    board.forEach(function(rowArr) {
+        rowArr.forEach(function(col) {
+          if(col.hasMine) count += 1
+          return
+        })
+    })
+    console.log(count)
+  }
+
   function handleDifficulty(evt) {
     //guards
     if (evt.target.tagName !== 'BUTTON') return;
@@ -120,6 +133,7 @@ document.getElementById('reset').addEventListener('click', function(){
         boardEl.removeChild(boardEl.firstChild)
     }
     //------------------------------------------
+    renderBoard();
     render();
     
     document.getElementById('e').style.visibility = 'hidden';
