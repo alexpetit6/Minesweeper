@@ -19,38 +19,36 @@ class mainCell {
 /*----- state variables -----*/
 
 const cell = new mainCell(null, false, false, false, 0)
-let board = [];
+let board;
 let boardSize;
 let mineCount;
 
   /*----- cached elements  -----*/
 const boardEl = document.getElementById('board')
 
+
   /*----- event listeners -----*/
 document.querySelector('header').addEventListener('click', handleDifficulty)
-
+document.querySelector('body > button').addEventListener('click', function(){
+    const boardEls = document.querySelectorAll('section > div')
+    for (i = 0; i < boardEls.length; i++) {
+        boardEls[i].remove();
+    }
+    init();
+})
   /*----- functions -----*/
   init();
 
   function init() {
-    // board = [
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    //     [cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell, cell,],
-    // ]
+    
+    document.getElementById('e').style.visibility = 'visible';
+    document.getElementById('m').style.visibility = 'visible';
+    document.getElementById('h').style.visibility = 'visible';
+    // for (i = 0; i < boardEl.length; i++) {
+    //     console.log(boardEl[i])
+    //     //     // boardEl[i].removeChild();
+    // }    
+    board = [];
     boardSize = 'm';
     render();
   }
@@ -66,21 +64,20 @@ document.querySelector('header').addEventListener('click', handleDifficulty)
     renderBoardSize();
     boardEl.style.gridTemplateRows = `repeat(${boardSizes[boardSize][0]}, 5vmin)`;
     boardEl.style.gridTemplateColumns = `repeat(${boardSizes[boardSize][1]}, 5vmin)`;
-    let boardTotal = (boardSizes[boardSize][0]) * (boardSizes[boardSize][1]);
     board.forEach(function(rowArr, rowIdx) {
         rowArr.forEach(function(col, colIdx) {
             const newCellEl = document.createElement('div');
-            newCellEl.setAttribute('id', `${rowIdx}${colIdx}`);
+            newCellEl.setAttribute('id', `${rowIdx},${colIdx}`);
             newCellEl.innerHTML = '<img src="https://dannytan.github.io/images/minesweeper_bomb.png">'
             boardEl.append(newCellEl);
-        })
+                
+        }) 
     })
-    // for (let i = 0; i < boardTotal; i++) {
-    //    const newCellEl = document.createElement('div');
-    //    newCellEl.setAttribute('id', ``)
-    //    boardEl.append(newCellEl);
-    // }
+       
+        
   }
+    
+  
 
   function renderControls() {
 
@@ -91,18 +88,23 @@ document.querySelector('header').addEventListener('click', handleDifficulty)
   }
 
   function renderMines() {
-    // if (cell.hasMine = false) 
-  }
+    board.forEach(function(rowArr) {
+        rowArr.forEach(function(col) {
+            let cellEl = document.getElementById(`${col.position[0]},${col.position[1]}`);
+            cellEl.firstChild.style.visibility = col.hasMine ? 'visible' : 'hidden'
+        })
+    })
+    }
 
   function renderBoardSize() {
     board.length = 0;
-    for (let i = 0; i < boardSizes[boardSize][0]; i++) {''
-        board.push([])
+    for (let i = 0; i < boardSizes[boardSize][0]; i++) {
+        board.push([]);
     }
     board.forEach(function(rowArr, rowIdx) {
        for (let i = 0; i < boardSizes[boardSize][1]; i++) {
         let newCell = new mainCell([rowIdx, i], false, false, false, 0);
-        rowArr.push(newCell)
+        rowArr.push(newCell);
         }
     })
   }
@@ -120,4 +122,8 @@ document.querySelector('header').addEventListener('click', handleDifficulty)
     }
     //------------------------------------------
     render();
+    
+    document.getElementById('e').style.visibility = 'hidden';
+    document.getElementById('m').style.visibility = 'hidden';
+    document.getElementById('h').style.visibility = 'hidden';
   }
