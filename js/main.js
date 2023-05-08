@@ -29,11 +29,8 @@ const boardEl = document.getElementById('board')
 
   /*----- event listeners -----*/
 document.querySelector('header').addEventListener('click', handleDifficulty)
-document.querySelector('body > button').addEventListener('click', function(){
-    const boardEls = document.querySelectorAll('section > div')
-    for (i = 0; i < boardEls.length; i++) {
-        boardEls[i].remove();
-    }
+document.getElementById('reset').addEventListener('click', function(){
+    removeBoardEls();
     init();
 })
   /*----- functions -----*/
@@ -43,11 +40,7 @@ document.querySelector('body > button').addEventListener('click', function(){
     
     document.getElementById('e').style.visibility = 'visible';
     document.getElementById('m').style.visibility = 'visible';
-    document.getElementById('h').style.visibility = 'visible';
-    // for (i = 0; i < boardEl.length; i++) {
-    //     console.log(boardEl[i])
-    //     //     // boardEl[i].removeChild();
-    // }    
+    document.getElementById('h').style.visibility = 'visible';   
     board = [];
     boardSize = 'm';
     render();
@@ -61,7 +54,8 @@ document.querySelector('body > button').addEventListener('click', function(){
   }
 
   function renderBoard() {
-    renderBoardSize();
+      removeBoardEls();
+      renderBoardSize();
     boardEl.style.gridTemplateRows = `repeat(${boardSizes[boardSize][0]}, 5vmin)`;
     boardEl.style.gridTemplateColumns = `repeat(${boardSizes[boardSize][1]}, 5vmin)`;
     board.forEach(function(rowArr, rowIdx) {
@@ -109,7 +103,12 @@ document.querySelector('body > button').addEventListener('click', function(){
     })
   }
      
-  
+  function removeBoardEls() {
+    const boardEls = document.querySelectorAll('#board > div')
+    for (i = 0; i < boardEls.length; i++) {
+        boardEls[i].remove();
+    }
+  }
 
   function handleDifficulty(evt) {
     //guards
