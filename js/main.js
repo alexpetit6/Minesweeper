@@ -130,8 +130,30 @@ document.getElementById('reset').addEventListener('click', function(){
     }
   }
   
+  function countAdjMines() {
+    board.forEach(function(rowArr,rowIdx){
+        rowArr.forEach(function(col, colIdx){
+            let count = 0;
+            count += countAdjSquares(rowIdx + 1, colIdx + 1)
+            count += countAdjSquares(rowIdx - 1, colIdx - 1)
+            count += countAdjSquares(rowIdx + 1, colIdx - 1)
+            count += countAdjSquares(rowIdx - 1, colIdx + 1)
+            count += countAdjSquares(rowIdx + 1, colIdx)
+            count += countAdjSquares(rowIdx -1, colIdx)
+            count += countAdjSquares(rowIdx, colIdx + 1)
+            count += countAdjSquares(rowIdx, colIdx -1)
+            col.minesTouching = count
+            console.log(col)
+        })
+    })
+  }
 
-  
+  function countAdjSquares(rowIdx, colIdx) {
+    
+    if(rowIdx < 0 || rowIdx > board.length - 1 || colIdx < 0 || colIdx > board[0].length - 1) return 0;
+    if (board[rowIdx][colIdx].hasMine) return 1;
+    return 0;
+  }
 
   function handleDifficulty(evt) {
     //guards
