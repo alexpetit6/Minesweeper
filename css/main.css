@@ -30,6 +30,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: 'Russo One', sans-serif;;
 }
  
 div > img {

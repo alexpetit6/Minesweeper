@@ -90,6 +90,21 @@ document.getElementById('reset').addEventListener('click', function(){
             cellEl.firstChild.style.visibility = col.hasMine ? 'visible' : 'hidden'
             if(col.hasMine) return
             if (col.minesTouching) {
+                if(col.minesTouching === 2) {
+                    cellEl.style.color = 'blue'
+                }
+                if(col.minesTouching === 3) {
+                    cellEl.style.color = 'green'
+                }
+                if(col.minesTouching === 4) {
+                    cellEl.style.color = 'orange'
+                }
+                if(col.minesTouching === 5) {
+                    cellEl.style.color = 'red'
+                }
+                if(col.minesTouching === 6) {
+                    cellEl.style.color = 'purple'
+                }
                 cellEl.innerText = col.minesTouching
             }
 
