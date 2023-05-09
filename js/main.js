@@ -113,15 +113,25 @@ document.getElementById('reset').addEventListener('click', function(){
   }
 
   function placeMines() {
-    let count = 0
-    board.forEach(function(rowArr) {
-        rowArr.forEach(function(col) {
-          if(col.hasMine) count += 1
-          return
-        })
-    })
-    console.log(count)
+    let count = 0;
+    while(count < boardSizes[boardSize][2] - 1) {
+        board.forEach(function(rowArr) {
+            rowArr.forEach(function(col) {
+                let rndNum = Math.floor(Math.random() * 100)
+                if (col.hasMine) return
+                else if (rndNum === 1) {
+                    col.hasMine = true
+                    count++
+                } else {
+                return
+                }  
+            });
+        });
+    }
   }
+  
+
+  
 
   function handleDifficulty(evt) {
     //guards
