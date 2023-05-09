@@ -88,6 +88,11 @@ document.getElementById('reset').addEventListener('click', function(){
         rowArr.forEach(function(col) {
             let cellEl = document.getElementById(`${col.position[0]},${col.position[1]}`);
             cellEl.firstChild.style.visibility = col.hasMine ? 'visible' : 'hidden'
+            if(col.hasMine) return
+            if (col.minesTouching) {
+                cellEl.innerText = col.minesTouching
+            }
+
         })
     })
     }
@@ -114,20 +119,23 @@ document.getElementById('reset').addEventListener('click', function(){
 
   function placeMines() {
     let count = 0;
-    while(count < boardSizes[boardSize][2] - 1) {
+    while(count < boardSizes[boardSize][2]) {
         board.forEach(function(rowArr) {
             rowArr.forEach(function(col) {
                 let rndNum = Math.floor(Math.random() * 100)
-                if (col.hasMine) return
+                if(count >= boardSizes[boardSize][2]) return
+                if (col.hasMine) {return}
                 else if (rndNum === 1) {
                     col.hasMine = true
                     count++
                 } else {
                 return
                 }  
+
             });
         });
     }
+    console.log(count)
   }
   
   function countAdjMines() {
