@@ -5,6 +5,14 @@ const boardSizes = {
     m: [16, 16, 40],
     h: [16, 30, 99]
 }
+const colors = {
+    1: 'black',
+    2: 'blue',
+    3: 'green',
+    4: 'orange',
+    5: 'red',
+    6: 'purple',
+}
 class mainCell {
     constructor(position, isRevealed, isFlagged, hasMine, minesTouching) {
         this.position = position
@@ -49,7 +57,7 @@ document.getElementById('board').addEventListener('click', handleFirstClick, {on
   }
   
   function render() {
-    renderMines();
+    renderTiles();
     renderControls();
     renderMessages();
   }
@@ -66,12 +74,8 @@ document.getElementById('board').addEventListener('click', handleFirstClick, {on
             boardEl.append(newCellEl);
                 
         }) 
-    })
-       
-        
+    })      
   }
-    
-  
 
   function renderControls() {
 
@@ -81,41 +85,31 @@ document.getElementById('board').addEventListener('click', handleFirstClick, {on
 
   }
 
-  function renderMines() {
+  function renderTiles() {
      
     //-------------------------------
     board.forEach(function(rowArr, rowIdx) {
         rowArr.forEach(function(col, colIdx) {
             let cellEl = document.getElementById(`${rowIdx} , ${colIdx}`);
-            if(col.hasMine) {
+            if (col.isRevealed) {
+                cellEl.style.backgroundColor = 'rgb(179, 179, 179)'
+                cellEl.style.boxShadow = 'none'
+                if(col.hasMine) {
                 cellEl.innerHTML = `<img id="${rowIdx} , ${colIdx}" src="https://dannytan.github.io/images/minesweeper_bomb.png">`
                 return
-            } else {
+                } else {
                 cellEl.innerHTML = ''
-            }
-            if (col.minesTouching) {
-                if(col.minesTouching === 1) {
-                    cellEl.style.color = 'black'
                 }
-                if(col.minesTouching === 2) {
-                    cellEl.style.color = 'blue'
-                }
-                if(col.minesTouching === 3) {
-                    cellEl.style.color = 'green'
-                }
-                if(col.minesTouching === 4) {
-                    cellEl.style.color = 'orange'
-                }
-                if(col.minesTouching === 5) {
-                    cellEl.style.color = 'red'
-                }
-                if(col.minesTouching === 6) {
-                    cellEl.style.color = 'purple'
-                }
+                if (col.minesTouching) {
+                    cellEl.style.color = `${colors[col.minesTouching]}`
                 cellEl.innerHTML = col.minesTouching
+                } else {
+                    cellEl.innerHTML = ''
+                }
             } else {
                 cellEl.innerHTML = ''
-            }   
+
+            }
         })
 
     })
@@ -230,7 +224,6 @@ document.getElementById('board').addEventListener('click', handleFirstClick, {on
     let colIdx = parseInt(split[1])
     placeMines();
     countAdjMines();
-    console.log(board[rowIdx][colIdx])
     let count = 0;
     while(board[rowIdx][colIdx].hasMine || board[rowIdx][colIdx].minesTouching) {
         placeMines();
