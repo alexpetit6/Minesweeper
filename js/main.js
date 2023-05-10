@@ -33,7 +33,7 @@ document.getElementById('reset').addEventListener('click', function(){
     removeBoardEls();
     init();
 })
-document.getElementById('board').addEventListener('click', handleFirstClick,) //{once: true})
+document.getElementById('board').addEventListener('click', handleFirstClick, {once: true})
   /*----- functions -----*/
   init();
 
@@ -228,15 +228,15 @@ document.getElementById('board').addEventListener('click', handleFirstClick,) //
     split.splice(1, 1)
     let rowIdx = parseInt(split[0])
     let colIdx = parseInt(split[1])
-    console.log(board[rowIdx][colIdx])
     placeMines();
     countAdjMines();
+    console.log(board[rowIdx][colIdx])
+    let count = 0;
+    while(board[rowIdx][colIdx].hasMine || board[rowIdx][colIdx].minesTouching) {
+        placeMines();
+        countAdjMines();
+        count++;
+        console.log(count)
+    }
     render();
-    //let count = 0;
-    // while(board[rowIdx][colIdx].hasMine && board[rowIdx][colIdx].minesTouching) {
-    //     placeMines();
-    //     countAdjMines();
-    //     count++;
-    //     console.log(count)
-    // }
    }
