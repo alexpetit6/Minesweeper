@@ -33,6 +33,7 @@ document.getElementById('reset').addEventListener('click', function(){
     removeBoardEls();
     init();
 })
+document.getElementById('board').addEventListener('click', handleFirstClick,) //{once: true})
   /*----- functions -----*/
   init();
 
@@ -61,8 +62,7 @@ document.getElementById('reset').addEventListener('click', function(){
     board.forEach(function(rowArr, rowIdx) {
         rowArr.forEach(function(col, colIdx) {
             const newCellEl = document.createElement('div');
-            newCellEl.setAttribute('id', `${rowIdx},${colIdx}`);
-            newCellEl.innerHTML = '<img src="https://dannytan.github.io/images/minesweeper_bomb.png">'
+            newCellEl.setAttribute('id', `${rowIdx} , ${colIdx}`);
             boardEl.append(newCellEl);
                 
         }) 
@@ -84,12 +84,19 @@ document.getElementById('reset').addEventListener('click', function(){
   function renderMines() {
      
     //-------------------------------
-    board.forEach(function(rowArr) {
-        rowArr.forEach(function(col) {
-            let cellEl = document.getElementById(`${col.position[0]},${col.position[1]}`);
-            cellEl.firstChild.style.visibility = col.hasMine ? 'visible' : 'hidden'
-            if(col.hasMine) return
+    board.forEach(function(rowArr, rowIdx) {
+        rowArr.forEach(function(col, colIdx) {
+            let cellEl = document.getElementById(`${rowIdx} , ${colIdx}`);
+            if(col.hasMine) {
+                cellEl.innerHTML = `<img id="${rowIdx} , ${colIdx}" src="https://dannytan.github.io/images/minesweeper_bomb.png">`
+                return
+            } else {
+                cellEl.innerHTML = ''
+            }
             if (col.minesTouching) {
+                if(col.minesTouching === 1) {
+                    cellEl.style.color = 'black'
+                }
                 if(col.minesTouching === 2) {
                     cellEl.style.color = 'blue'
                 }
@@ -105,12 +112,15 @@ document.getElementById('reset').addEventListener('click', function(){
                 if(col.minesTouching === 6) {
                     cellEl.style.color = 'purple'
                 }
-                cellEl.innerText = col.minesTouching
-            }
-
+                cellEl.innerHTML = col.minesTouching
+            } else {
+                cellEl.innerHTML = ''
+            }   
         })
+
     })
-    }
+  }
+    
 
   function renderBoardSize() {
     board.length = 0;
@@ -133,6 +143,7 @@ document.getElementById('reset').addEventListener('click', function(){
   }
 
   function placeMines() {
+    clearMines();
     let count = 0;
     while(count < boardSizes[boardSize][2]) {
         board.forEach(function(rowArr) {
@@ -150,10 +161,26 @@ document.getElementById('reset').addEventListener('click', function(){
             });
         });
     }
-    console.log(count)
+    // console.log(count)
+  }
+
+  function clearMines() {
+    board.forEach(function(rowArr) {
+        rowArr.forEach(function(col) {
+            col.hasMine = false
+        })
+    })        
+  }
+  function clearCount() {
+    board.forEach(function(rowArr) {
+        rowArr.forEach(function(col) {
+            col.minesTouching = 0
+        })
+    })        
   }
   
   function countAdjMines() {
+    clearCount();
     board.forEach(function(rowArr,rowIdx){
         rowArr.forEach(function(col, colIdx){
             let count = 0;
@@ -166,7 +193,7 @@ document.getElementById('reset').addEventListener('click', function(){
             count += countAdjSquares(rowIdx, colIdx + 1)
             count += countAdjSquares(rowIdx, colIdx -1)
             col.minesTouching = count
-            console.log(col)
+            //console.log(col)
         })
     })
   }
@@ -195,3 +222,21 @@ document.getElementById('reset').addEventListener('click', function(){
     document.getElementById('m').style.visibility = 'hidden';
     document.getElementById('h').style.visibility = 'hidden';
   }
+
+  function handleFirstClick(evt) {
+    let split = evt.target.getAttribute('id').split(' ')
+    split.splice(1, 1)
+    let rowIdx = parseInt(split[0])
+    let colIdx = parseInt(split[1])
+    console.log(board[rowIdx][colIdx])
+    placeMines();
+    countAdjMines();
+    render();
+    //let count = 0;
+    // while(board[rowIdx][colIdx].hasMine && board[rowIdx][colIdx].minesTouching) {
+    //     placeMines();
+    //     countAdjMines();
+    //     count++;
+    //     console.log(count)
+    // }
+   }
