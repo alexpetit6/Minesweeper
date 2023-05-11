@@ -33,8 +33,8 @@ let gameStatus;
 
   /*----- cached elements  -----*/
 const boardEl = document.getElementById('board')
-
-
+const msgBoxEl = document.getElementById('msgBox')
+const finalMsg = document.getElementById('finalMsg')
   /*----- event listeners -----*/
 document.querySelector('header').addEventListener('click', handleDifficulty);
 document.getElementById('reset').addEventListener('click', function(){
@@ -58,6 +58,7 @@ boardEl.addEventListener('contextmenu', handleFlag);
     document.getElementById('h').style.visibility = 'visible';   
     board = [];
     boardSize = 'm';
+    msgBoxEl.style.visibility = 'hidden';
     renderBoard();
     render();
   }
@@ -89,7 +90,12 @@ boardEl.addEventListener('contextmenu', handleFlag);
 
   function renderMessages() {
 
-  }
+    if (gameStatus === 'w') {
+        msgBoxEl.style.visibility = 'visible'
+    } else {
+        msgBoxEl.style.visibility = 'hidden'
+    }
+  } 
 
   function renderTiles() {
     board.forEach(function(rowArr, rowIdx) {
@@ -169,14 +175,27 @@ boardEl.addEventListener('contextmenu', handleFlag);
         })
     })        
   }
+
+  
   function clearCount() {
+      board.forEach(function(rowArr) {
+          rowArr.forEach(function(col) {
+              col.minesTouching = 0
+            })
+        })        
+    }
+    
+  function checkWin() {
+    let count = 0;
     board.forEach(function(rowArr) {
         rowArr.forEach(function(col) {
-            col.minesTouching = 0
-        })
-    })        
-  }
-  
+              if(col.isFlagged || col.isRevealed) count++;
+              console.log(count)
+          })
+      })
+    if(count === board.length * board[0].length) gameStatus = 'w'        
+    }
+
   function countAdjMines() {
     clearCount();
     board.forEach(function(rowArr,rowIdx){
@@ -244,47 +263,54 @@ boardEl.addEventListener('contextmenu', handleFlag);
   
 
   /*----- handle click functions  -----*/
-
+  
   function handleFirstClick(evt) {
-      let split = evt.target.getAttribute('id').split(' ')
-      split.splice(1, 1)
-      let rowIdx = parseInt(split[0])
-      let colIdx = parseInt(split[1])
-      placeMines();
-      countAdjMines();
-      let count = 0;
-      while(board[rowIdx][colIdx].hasMine || board[rowIdx][colIdx].minesTouching) {
-          placeMines();
+    document.getElementById('e').style.visibility = 'hidden'
+    document.getElementById('m').style.visibility = 'hidden'
+    document.getElementById('h').style.visibility = 'hidden'
+    let split = evt.target.getAttribute('id').split(' ')
+    split.splice(1, 1)
+    let rowIdx = parseInt(split[0])
+    let colIdx = parseInt(split[1])
+    placeMines();
+    countAdjMines();
+    while(board[rowIdx][colIdx].hasMine || board[rowIdx][colIdx].minesTouching) {
+        placeMines();
         countAdjMines();
-        count++;
-       // console.log(count)
     }
     render();
 }
 
 function handleTileClick(evt) {
+    if(gameStatus) return;
+    if(document.getElementById('e').style.visibility === 'visible'
+    && document.getElementById('m').style.visibility === 'visible'
+    && document.getElementById('h').style.visibility === 'visible') return;
     let split = evt.target.getAttribute('id').split(' ');
     split.splice(1, 1);
     let rowIdx = parseInt(split[0]);
     let colIdx = parseInt(split[1]);
     let cell = board[rowIdx][colIdx];
     if(cell.hasMine) {
-        gameStatus = 'l'
+        gameStatus = 'l';
         board.forEach(function(rowArr) {
             rowArr.forEach(function(col) {
                 col.isRevealed = true;
             });
         });
         render();
+        return;
     } else if(cell.minesTouching) {
         cell.isRevealed = true;
     } else {
-        revealTile(rowIdx, colIdx)
+        revealTile(rowIdx, colIdx);
     }
+    checkWin();
     render();
 }
 
 function handleFlag(evt) {
+    if(gameStatus) return;
     evt.preventDefault();
     let split = evt.target.getAttribute('id').split(' ');
     split.splice(1, 1);
@@ -296,6 +322,7 @@ function handleFlag(evt) {
     } else {
     cell.isFlagged = true
     }
+    checkWin();
     render();
 }
 

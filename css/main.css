@@ -45,3 +45,21 @@ div > img {
     height: 90%;
     width: 90%;
 }
+
+#msgBox {
+    display: flex;
+    align-items: center;
+    background-color: rgb(114, 114, 114);
+    position: absolute;
+    top: 45vmin;
+    z-index: 1;
+    height: 30vmin;
+    width: 50vmin;
+    border: 0.7vmin solid rgb(102, 102, 102);
+    border-radius: 11%;
+}
+
+#finalMsg {
+    text-align: center;
+    font-size: 3vmin;
+}
