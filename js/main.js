@@ -26,7 +26,6 @@ class mainCell {
 
 /*----- state variables -----*/
 
-const cell = new mainCell(null, false, false, false, 0)
 let board;
 let boardSize;
 let mineCount;
@@ -39,8 +38,7 @@ const boardEl = document.getElementById('board')
   /*----- event listeners -----*/
 document.querySelector('header').addEventListener('click', handleDifficulty);
 document.getElementById('reset').addEventListener('click', function(){
-    removeBoardEls();
-    init();
+   location.reload();
 });
 boardEl.addEventListener('click', handleFirstClick, {once: true});
 boardEl.addEventListener('click', handleTileClick);
