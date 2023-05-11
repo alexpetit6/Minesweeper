@@ -42,10 +42,13 @@ document.getElementById('reset').addEventListener('click', function(){
     removeBoardEls();
     init();
 });
-document.getElementById('board').addEventListener('click', handleFirstClick, {once: true});
-document.getElementById('board').addEventListener('click', handleTileClick);
+boardEl.addEventListener('click', handleFirstClick, {once: true});
+boardEl.addEventListener('click', handleTileClick);
 boardEl.addEventListener('contextmenu', handleFlag);
-    
+// boardEl.addEventListener("mouseover", function() {
+//     document.addEventListener("keydown", handleFlag) 
+      
+//   });
 
   /*----- functions -----*/
   init();
@@ -94,7 +97,6 @@ boardEl.addEventListener('contextmenu', handleFlag);
     board.forEach(function(rowArr, rowIdx) {
         rowArr.forEach(function(col, colIdx) {
             let cellEl = document.getElementById(`${rowIdx} , ${colIdx}`);
-            if(col.isFlagged) cellEl.innerHTML = `<img id="${rowIdx} , ${colIdx}" src="https://www.jsingler.de/apps/luckysweeper/flag.svg.png">`
             if (col.isRevealed) {
                 cellEl.style.backgroundColor = 'rgb(179, 179, 179)'
                 cellEl.style.boxShadow = 'none'
@@ -112,8 +114,8 @@ boardEl.addEventListener('contextmenu', handleFlag);
                 }
             } else {
                 cellEl.innerHTML = ''
-
             }
+            if(col.isFlagged) cellEl.innerHTML = `<img class="flag" id="${rowIdx} , ${colIdx}" src="http://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/25d5208fbd9c655.png">`
         })
 
     })
@@ -285,6 +287,7 @@ function handleTileClick(evt) {
 }
 
 function handleFlag(evt) {
+    evt.preventDefault();
     let split = evt.target.getAttribute('id').split(' ');
     split.splice(1, 1);
     let rowIdx = parseInt(split[0]);
