@@ -290,7 +290,11 @@ function handleFlag(evt) {
     let rowIdx = parseInt(split[0]);
     let colIdx = parseInt(split[1]);
     let cell = board[rowIdx][colIdx];
+    if(cell.isFlagged) {
+        cell.isFlagged = false;
+    } else {
     cell.isFlagged = true
+    }
     render();
 }
 
