@@ -30,18 +30,23 @@ const cell = new mainCell(null, false, false, false, 0)
 let board;
 let boardSize;
 let mineCount;
+let gameStatus;
 
   /*----- cached elements  -----*/
 const boardEl = document.getElementById('board')
 
 
   /*----- event listeners -----*/
-document.querySelector('header').addEventListener('click', handleDifficulty)
+document.querySelector('header').addEventListener('click', handleDifficulty);
 document.getElementById('reset').addEventListener('click', function(){
     removeBoardEls();
     init();
-})
-document.getElementById('board').addEventListener('click', handleFirstClick, {once: true})
+});
+document.getElementById('board').addEventListener('click', handleFirstClick, {once: true});
+document.getElementById('board').addEventListener('click', handleTileClick);
+boardEl.addEventListener('contextmenu', handleFlag);
+    
+
   /*----- functions -----*/
   init();
 
@@ -86,11 +91,10 @@ document.getElementById('board').addEventListener('click', handleFirstClick, {on
   }
 
   function renderTiles() {
-     
-    //-------------------------------
     board.forEach(function(rowArr, rowIdx) {
         rowArr.forEach(function(col, colIdx) {
             let cellEl = document.getElementById(`${rowIdx} , ${colIdx}`);
+            if(col.isFlagged) cellEl.innerHTML = `<img id="${rowIdx} , ${colIdx}" src="https://www.jsingler.de/apps/luckysweeper/flag.svg.png">`
             if (col.isRevealed) {
                 cellEl.style.backgroundColor = 'rgb(179, 179, 179)'
                 cellEl.style.boxShadow = 'none'
@@ -199,37 +203,112 @@ document.getElementById('board').addEventListener('click', handleFirstClick, {on
     return 0;
   }
 
-  function handleDifficulty(evt) {
-    //guards
-    if (evt.target.tagName !== 'BUTTON') return;
-    //------------------------------------------
-    boardSize = evt.target.getAttribute('id');
-    // removes all divs in boardEl
-    while (boardEl.firstChild) {
-        boardEl.removeChild(boardEl.firstChild)
+  function revealTile(rowIdx, colIdx) {
+    console.log(rowIdx, colIdx)
+    let cell = board[rowIdx][colIdx]
+    console.log(cell, rowIdx, colIdx)
+    if (cell.isRevealed) { console.log('revealed'); return}
+    if (cell.hasMine) { console.log('mine');  return}
+    cell.isRevealed = true;
+    if(cell.minesTouching === 0) {
+        if(rowIdx + 1 <= board.length - 1) {
+            revealTile(rowIdx + 1, colIdx)
+        }
+        if(rowIdx - 1 >= 0) {
+            revealTile(rowIdx - 1, colIdx)
+        }
+        if(rowIdx + 1 <= board.length - 1 && colIdx + 1 <= board[0].length - 1) {
+            revealTile(rowIdx + 1, colIdx + 1)
+        }
+        if(rowIdx + 1 <= board.length - 1 && colIdx - 1 >= 0) {
+            revealTile(rowIdx + 1, colIdx - 1)
+        }
+        if(rowIdx - 1 >= 0 && colIdx + 1 <= board[0].length - 1) {
+            revealTile(rowIdx - 1, colIdx +1)
+        }
+        if(rowIdx - 1 >= 0 && colIdx - 1 >= 0) {
+            revealTile(rowIdx - 1, colIdx -1)
+        }
+        if(colIdx + 1 <= board[0].length - 1) {
+            revealTile(rowIdx, colIdx + 1)
+        }
+        if(colIdx - 1 >= 0) {
+            revealTile(rowIdx, colIdx - 1)
+        }
+    } else if(cell.minesTouching) {
+        cell.isRevealed = true
+        console.log('touching')
     }
-    //------------------------------------------
-    renderBoard();
-    render();
     
-    document.getElementById('e').style.visibility = 'hidden';
-    document.getElementById('m').style.visibility = 'hidden';
-    document.getElementById('h').style.visibility = 'hidden';
   }
+  
+
+  /*----- handle click functions  -----*/
 
   function handleFirstClick(evt) {
-    let split = evt.target.getAttribute('id').split(' ')
-    split.splice(1, 1)
-    let rowIdx = parseInt(split[0])
-    let colIdx = parseInt(split[1])
-    placeMines();
-    countAdjMines();
-    let count = 0;
-    while(board[rowIdx][colIdx].hasMine || board[rowIdx][colIdx].minesTouching) {
-        placeMines();
+      let split = evt.target.getAttribute('id').split(' ')
+      split.splice(1, 1)
+      let rowIdx = parseInt(split[0])
+      let colIdx = parseInt(split[1])
+      placeMines();
+      countAdjMines();
+      let count = 0;
+      while(board[rowIdx][colIdx].hasMine || board[rowIdx][colIdx].minesTouching) {
+          placeMines();
         countAdjMines();
         count++;
-        console.log(count)
+       // console.log(count)
     }
     render();
-   }
+}
+
+function handleTileClick(evt) {
+    let split = evt.target.getAttribute('id').split(' ');
+    split.splice(1, 1);
+    let rowIdx = parseInt(split[0]);
+    let colIdx = parseInt(split[1]);
+    let cell = board[rowIdx][colIdx];
+    if(cell.hasMine) {
+        gameStatus = 'l'
+        board.forEach(function(rowArr) {
+            rowArr.forEach(function(col) {
+                col.isRevealed = true;
+            });
+        });
+        render();
+    } else if(cell.minesTouching) {
+        cell.isRevealed = true;
+    } else {
+        revealTile(rowIdx, colIdx)
+    }
+    render();
+}
+
+function handleFlag(evt) {
+    let split = evt.target.getAttribute('id').split(' ');
+    split.splice(1, 1);
+    let rowIdx = parseInt(split[0]);
+    let colIdx = parseInt(split[1]);
+    let cell = board[rowIdx][colIdx];
+    cell.isFlagged = true
+    render();
+}
+
+function handleDifficulty(evt) {
+  //guards
+  if (evt.target.tagName !== 'BUTTON') return;
+  //------------------------------------------
+  boardSize = evt.target.getAttribute('id');
+  // removes all divs in boardEl
+  while (boardEl.firstChild) {
+      boardEl.removeChild(boardEl.firstChild)
+  }
+  //------------------------------------------
+  renderBoard();
+  render();
+  
+  document.getElementById('e').style.visibility = 'hidden';
+  document.getElementById('m').style.visibility = 'hidden';
+  document.getElementById('h').style.visibility = 'hidden';
+}
+
