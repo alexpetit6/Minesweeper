@@ -46,15 +46,20 @@ div > img {
     width: 90%;
 }
 
+#box {
+    position: absolute;
+    top: 45vmin;
+    z-index: -1;
+    height: 30vmin;
+    width: 50vmin;
+}
+
 #msgBox {
     display: flex;
     align-items: center;
+    height: 100%;
+    width: 100%;
     background-color: rgb(114, 114, 114);
-    position: absolute;
-    top: 45vmin;
-    z-index: 1;
-    height: 30vmin;
-    width: 50vmin;
     border: 0.7vmin solid rgb(102, 102, 102);
     border-radius: 11%;
 }

@@ -33,7 +33,7 @@ let gameStatus;
 
   /*----- cached elements  -----*/
 const boardEl = document.getElementById('board')
-const msgBoxEl = document.getElementById('msgBox')
+const boxEl = document.getElementById('box')
 const finalMsg = document.getElementById('finalMsg')
   /*----- event listeners -----*/
 document.querySelector('header').addEventListener('click', handleDifficulty);
@@ -43,11 +43,6 @@ document.getElementById('reset').addEventListener('click', function(){
 boardEl.addEventListener('click', handleFirstClick, {once: true});
 boardEl.addEventListener('click', handleTileClick);
 boardEl.addEventListener('contextmenu', handleFlag);
-// boardEl.addEventListener("mouseover", function() {
-//     document.addEventListener("keydown", handleFlag) 
-      
-//   });
-
   /*----- functions -----*/
   init();
 
@@ -58,7 +53,6 @@ boardEl.addEventListener('contextmenu', handleFlag);
     document.getElementById('h').style.visibility = 'visible';   
     board = [];
     boardSize = 'm';
-    msgBoxEl.style.visibility = 'hidden';
     renderBoard();
     render();
   }
@@ -91,11 +85,10 @@ boardEl.addEventListener('contextmenu', handleFlag);
   function renderMessages() {
 
     if (gameStatus === 'w') {
-        msgBoxEl.style.visibility = 'visible'
-    } else {
-        msgBoxEl.style.visibility = 'hidden'
-    }
-  } 
+        boxEl.style.zIndex = '1'
+        boxEl.innerHTML = `<div id="msgBox"><h1 id= "finalMsg">Congratulations! <br> You have flagged every mine and revealed every safe tile!!!</h1></div>`
+    } 
+ }
 
   function renderTiles() {
     board.forEach(function(rowArr, rowIdx) {
@@ -343,4 +336,3 @@ function handleDifficulty(evt) {
   document.getElementById('m').style.visibility = 'hidden';
   document.getElementById('h').style.visibility = 'hidden';
 }
-
