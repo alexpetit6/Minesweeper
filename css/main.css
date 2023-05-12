@@ -2,6 +2,7 @@
     box-sizing: border-box;
 }
 body {
+    background-image: linear-gradient(150deg, rgb(48, 66, 128), rgb(103, 151, 233) );
     height: 100vh;
     margin: 0;
     display: flex;
@@ -11,11 +12,32 @@ body {
 }
 
 header {
+    font-size: 3vmin;
     text-align: center;
+    font-family: 'Instrument Sans', sans-serif;
+    margin: 0;
+}
+
+header > h1 {
+    color: rgb(24, 32, 48);
+    margin: 0;
+}
+
+.difficulty {
+    margin-bottom: 2vmin;
+    background-color: rgb(55, 67, 91);
+    color: rgb(145, 185, 255);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 2vmin;
+}
+
+.difficulty:hover {
+    background-color: rgb(145, 185, 255);
+    color: rgb(55, 67, 91);
 }
 
 #board {
-    margin: 10vmin;
+    margin: 0;
     display: grid;
     /* height: 100vmin; */
     /* width: 100vmin; */
@@ -44,6 +66,19 @@ div > img {
 .flag {
     height: 90%;
     width: 90%;
+}
+
+#reset {
+    margin-top: 0.7vmin;
+    background-color: rgb(55, 67, 91);
+    color: rgb(145, 185, 255);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 2vmin;
+}
+
+#reset:hover {
+    background-color: rgb(145, 185, 255);
+    color: rgb(55, 67, 91);
 }
 
 #box {
