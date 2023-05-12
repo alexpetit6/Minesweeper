@@ -1,9 +1,13 @@
 * {
     box-sizing: border-box;
 }
+
+html, body {
+    min-height: 100%;
+}
+
 body {
     background-image: linear-gradient(150deg, rgb(48, 66, 128), rgb(103, 151, 233) );
-    height: 100vh;
     margin: 0;
     display: flex;
     flex-direction: column;
