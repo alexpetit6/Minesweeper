@@ -21,19 +21,19 @@ header {
     /* width: 100vmin; */
     grid-template-columns: repeat(16, 5vmin);
     grid-template-columns: repeat(16, 5vmin);
+    background-image: url(https://wallpapercave.com/wp/5jtNsi1.jpg);
 }
 
 #board > div {
     height: 5vmin;
     width: 5vmin;
-    border: 0.5vmin solid rgb(102, 102, 102);
+    border: 0.5vmin solid rgb(55, 67, 91);
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: 'Russo One', sans-serif;
-    background-color: rgb(114, 114, 114);
+    background-color: rgba(114, 114, 114, 0.5);
     box-shadow: inset 0.2em 0.2em 0.2em 0 rgba(255,255,255,0.5), inset -0.2em -0.2em 0.2em 0 rgba(0,0,0,0.5);
-    
 }
  
 div > img {
@@ -67,4 +67,9 @@ div > img {
 #finalMsg {
     text-align: center;
     font-size: 3vmin;
+}
+
+#water {
+    position: absolute;
+    z-index: 0;
 }

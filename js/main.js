@@ -8,7 +8,7 @@ const boardSizes = {
 const colors = {
     1: 'black',
     2: 'blue',
-    3: 'green',
+    3: 'yellow',
     4: 'orange',
     5: 'red',
     6: 'purple',
@@ -95,7 +95,7 @@ boardEl.addEventListener('contextmenu', handleFlag);
         rowArr.forEach(function(col, colIdx) {
             let cellEl = document.getElementById(`${rowIdx} , ${colIdx}`);
             if (col.isRevealed) {
-                cellEl.style.backgroundColor = 'rgb(179, 179, 179)'
+                cellEl.style.backgroundColor = 'rgba(179, 179, 179, 0.5)'
                 cellEl.style.boxShadow = 'none'
                 if(col.hasMine) {
                 cellEl.innerHTML = `<img id="${rowIdx} , ${colIdx}" src="https://dannytan.github.io/images/minesweeper_bomb.png">`
