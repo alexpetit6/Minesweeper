@@ -28,6 +28,7 @@ header > h1 {
 }
 
 #controls {
+    margin: 0;
     font-size: 2vmin;
     color: rgb(55, 67, 91);
 }
