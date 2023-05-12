@@ -23,6 +23,11 @@ header > h1 {
     margin: 0;
 }
 
+#controls {
+    font-size: 2vmin;
+    color: rgb(55, 67, 91);
+}
+
 .difficulty {
     margin-bottom: 2vmin;
     background-color: rgb(55, 67, 91);
@@ -79,32 +84,4 @@ div > img {
 #reset:hover {
     background-color: rgb(145, 185, 255);
     color: rgb(55, 67, 91);
-}
-
-#box {
-    position: absolute;
-    top: 45vmin;
-    z-index: -1;
-    height: 30vmin;
-    width: 50vmin;
-}
-
-#msgBox {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    background-color: rgb(114, 114, 114);
-    border: 0.7vmin solid rgb(102, 102, 102);
-    border-radius: 11%;
-}
-
-#finalMsg {
-    text-align: center;
-    font-size: 3vmin;
-}
-
-#water {
-    position: absolute;
-    z-index: 0;
 }

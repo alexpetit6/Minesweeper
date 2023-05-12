@@ -32,9 +32,11 @@ let mineCount;
 let gameStatus;
 
   /*----- cached elements  -----*/
-const boardEl = document.getElementById('board')
-const boxEl = document.getElementById('box')
-const finalMsg = document.getElementById('finalMsg')
+const boardEl = document.getElementById('board');
+const boxEl = document.getElementById('box');
+const finalMsg = document.getElementById('finalMsg');
+const headerEl = document.getElementById('topMsg');
+const controlsEl = document.getElementById('controls');
   /*----- event listeners -----*/
 document.querySelector('header').addEventListener('click', handleDifficulty);
 document.getElementById('reset').addEventListener('click', function(){
@@ -59,7 +61,6 @@ boardEl.addEventListener('contextmenu', handleFlag);
   
   function render() {
     renderTiles();
-    renderControls();
     renderMessages();
   }
 
@@ -78,23 +79,31 @@ boardEl.addEventListener('contextmenu', handleFlag);
     })      
   }
 
-  function renderControls() {
-
-  }
-
   function renderMessages() {
-
-    if (gameStatus === 'w') {
-        boxEl.style.zIndex = '1'
-        boxEl.innerHTML = `<div id="msgBox"><h1 id= "finalMsg">Congratulations! <br> You have flagged every mine and revealed every safe tile!!!</h1></div>`
+    if(gameStatus) {
+        document.getElementById('e').style.visibility = 'hidden';
+        document.getElementById('m').style.visibility = 'hidden';
+        document.getElementById('h').style.visibility = 'hidden';
+    }
+    if(gameStatus === 'w') {
+        headerEl.innerText = 'Nice Work!'
+        controlsEl.innerHTML = ''
     } 
- }
+    if(gameStatus === 'p') {
+        headerEl.innerText = 'Good Luck!'
+        controlsEl.innerHTML = ''
+    }
+    if(gameStatus === 'l') {
+        headerEl.innerText = 'Try Again!'
+        controlsEl.innerHTML = ''
+    } 
+  }
 
   function renderTiles() {
     board.forEach(function(rowArr, rowIdx) {
         rowArr.forEach(function(col, colIdx) {
             let cellEl = document.getElementById(`${rowIdx} , ${colIdx}`);
-            if (col.isRevealed) {
+            if(col.isRevealed) {
                 cellEl.style.backgroundColor = 'rgba(179, 179, 179, 0.5)'
                 cellEl.style.boxShadow = 'none'
                 if(col.hasMine) {
@@ -103,7 +112,7 @@ boardEl.addEventListener('contextmenu', handleFlag);
                 } else {
                 cellEl.innerHTML = ''
                 }
-                if (col.minesTouching) {
+                if(col.minesTouching) {
                     cellEl.style.color = `${colors[col.minesTouching]}`
                 cellEl.innerHTML = col.minesTouching
                 } else {
@@ -158,7 +167,6 @@ boardEl.addEventListener('contextmenu', handleFlag);
             });
         });
     }
-    // console.log(count)
   }
 
   function clearMines() {
@@ -183,7 +191,6 @@ boardEl.addEventListener('contextmenu', handleFlag);
     board.forEach(function(rowArr) {
         rowArr.forEach(function(col) {
               if(col.isFlagged || col.isRevealed) count++;
-              console.log(count)
           })
       })
     if(count === board.length * board[0].length) gameStatus = 'w'        
@@ -203,24 +210,20 @@ boardEl.addEventListener('contextmenu', handleFlag);
             count += countAdjSquares(rowIdx, colIdx + 1)
             count += countAdjSquares(rowIdx, colIdx -1)
             col.minesTouching = count
-            //console.log(col)
         })
     })
   }
 
   function countAdjSquares(rowIdx, colIdx) {
-    
     if(rowIdx < 0 || rowIdx > board.length - 1 || colIdx < 0 || colIdx > board[0].length - 1) return 0;
-    if (board[rowIdx][colIdx].hasMine) return 1;
+    if(board[rowIdx][colIdx].hasMine) return 1;
     return 0;
   }
 
   function revealTile(rowIdx, colIdx) {
-    console.log(rowIdx, colIdx)
-    let cell = board[rowIdx][colIdx]
-    console.log(cell, rowIdx, colIdx)
-    if (cell.isRevealed) { console.log('revealed'); return}
-    if (cell.hasMine) { console.log('mine');  return}
+    let cell = board[rowIdx][colIdx];
+    if (cell.isRevealed) return;
+    if (cell.hasMine) return;
     cell.isRevealed = true;
     if(cell.minesTouching === 0) {
         if(rowIdx + 1 <= board.length - 1) {
@@ -249,15 +252,14 @@ boardEl.addEventListener('contextmenu', handleFlag);
         }
     } else if(cell.minesTouching) {
         cell.isRevealed = true
-        console.log('touching')
     }
-    
   }
   
 
   /*----- handle click functions  -----*/
   
   function handleFirstClick(evt) {
+    gameStatus = 'p';
     document.getElementById('e').style.visibility = 'hidden'
     document.getElementById('m').style.visibility = 'hidden'
     document.getElementById('h').style.visibility = 'hidden'
@@ -275,7 +277,7 @@ boardEl.addEventListener('contextmenu', handleFlag);
 }
 
 function handleTileClick(evt) {
-    if(gameStatus) return;
+    if(gameStatus === 'l') return;
     if(document.getElementById('e').style.visibility === 'visible'
     && document.getElementById('m').style.visibility === 'visible'
     && document.getElementById('h').style.visibility === 'visible') return;
@@ -303,7 +305,7 @@ function handleTileClick(evt) {
 }
 
 function handleFlag(evt) {
-    if(gameStatus) return;
+    if(gameStatus !== 'p') return;
     evt.preventDefault();
     let split = evt.target.getAttribute('id').split(' ');
     split.splice(1, 1);
@@ -320,19 +322,11 @@ function handleFlag(evt) {
 }
 
 function handleDifficulty(evt) {
-  //guards
-  if (evt.target.tagName !== 'BUTTON') return;
-  //------------------------------------------
-  boardSize = evt.target.getAttribute('id');
-  // removes all divs in boardEl
-  while (boardEl.firstChild) {
+    if (evt.target.tagName !== 'BUTTON') return;
+    boardSize = evt.target.getAttribute('id');
+    while (boardEl.firstChild) {
       boardEl.removeChild(boardEl.firstChild)
-  }
-  //------------------------------------------
-  renderBoard();
-  render();
-  
-  document.getElementById('e').style.visibility = 'hidden';
-  document.getElementById('m').style.visibility = 'hidden';
-  document.getElementById('h').style.visibility = 'hidden';
+    }
+    renderBoard();
+    render();
 }
